@@ -1,0 +1,31 @@
+#For test purposes only
+#Thu May 16 14:39:12 KST 2024
+jco.client.user=test
+jco.client.lang=EN
+jco.param.export=IFRESULT
+SFTP.LOCAL.UPLOAD.DIR=/upload
+SFTP.LOCAL.DOWNLOAD.DIR=/download
+SFTP.REMOTE.DOWNLOAD.DIR=/outbound/XG02
+jco.server.repository_destination=ZFIRMBANK
+jco.type=NORMAL
+SFTP.PORT=22
+LIVE_INTERVAL=600
+jco.server.connection_count=1
+jco.client.sysnr=00
+jco.server.progid=ZFIRMBANK
+jco.client.client=500
+SFTP.PRIVATE_KEY=D\:\\Biznbank\\Keys\\RBC\\id_rsa_krafton.ppk
+SFTP.HOST=test.com
+jco.server.gwserv=3301
+jco.client.ashost=biznbank2.iptime.org
+jco.function=ZBZS5F_LC_OUT
+jco.destination.peak_limit=10
+jco.server.gwhost=biznbank2.iptime.org
+API.URL=http\://bbswift.xyz/db/insert.php
+jco.destination.pool_capacity=3
+jco.param.import=I_FILENAME
+API.NAME=KRAFTON_RBC
+jco.param.table=IT_DATA
+jco.client.passwd=test\!@
+SFTP.USERNAME=TEST2Q17
+SFTP.REMOTE.UPLOAD.DIR=/inbound

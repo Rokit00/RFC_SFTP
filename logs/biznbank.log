@@ -1,0 +1,21 @@
+2024-05-16 14:39:12.407 [main] INFO  biz.bank.jco.JCoServerConfig - JCO CONFIG ERROR: Server default repository destination ZFIRMBANK is invalid: Initialization of repository destination ZFIRMBANK failed: Client 500 is not available in this system on biznbank2.iptime.org sysnr 00
+2024-05-16 14:39:12.422 [Timer-0] INFO  biz.bank.sftp.SFTPServiceImpl - Could not connect to SFTP server
+com.jcraft.jsch.JSchException: java.io.FileNotFoundException: D:\Biznbank\Keys\RBC\id_rsa_krafton.ppk (지정된 경로를 찾을 수 없습니다)
+	at com.jcraft.jsch.KeyPair.load(KeyPair.java:543)
+	at com.jcraft.jsch.IdentityFile.newInstance(IdentityFile.java:40)
+	at com.jcraft.jsch.JSch.addIdentity(JSch.java:406)
+	at com.jcraft.jsch.JSch.addIdentity(JSch.java:366)
+	at biz.bank.sftp.SFTPServiceImpl.setConnect(SFTPServiceImpl.java:28)
+	at biz.bank.sftp.SFTPServiceImpl.download(SFTPServiceImpl.java:102)
+	at biz.bank.sftp.SFTPServiceImpl$1.run(SFTPServiceImpl.java:92)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: java.io.FileNotFoundException: D:\Biznbank\Keys\RBC\id_rsa_krafton.ppk (지정된 경로를 찾을 수 없습니다)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at com.jcraft.jsch.Util.fromFile(Util.java:508)
+	at com.jcraft.jsch.KeyPair.load(KeyPair.java:540)
+	... 8 common frames omitted
+2024-05-16 14:39:12.470 [Timer-0] INFO  biz.bank.sftp.SFTPServiceImpl - SFTP DOWNLOAD JCO FUNCTION ERROR: Initialization of repository destination ZFIRMBANK failed: Client 500 is not available in this system on biznbank2.iptime.org sysnr 00
