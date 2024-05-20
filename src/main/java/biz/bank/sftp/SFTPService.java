@@ -5,5 +5,4 @@ public interface SFTPService {
     void disconnect();
     String  upload(String fileName, String importParam);
     void download();
-    void batchDownload();
 }

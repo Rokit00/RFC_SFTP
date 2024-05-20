@@ -18,25 +18,26 @@ public class JCoServerFunctionHandlerImpl implements JCoServerFunctionHandler {
 
     @Override
     public void handleRequest(JCoServerContext jCoServerContext, JCoFunction jCoFunction) {
+        log.info("[START] RFC HANDLE REQUEST------------------------");
         long startTime = System.currentTimeMillis();
 
         JCoParameterList importParameterList = jCoFunction.getImportParameterList();
         JCoParameterList exportParameterList = jCoFunction.getExportParameterList();
-        JCoTable tableParameterList = jCoFunction.getTableParameterList().getTable(properties.getProperty("jco.param.table"));
+        JCoTable tableParameterList = jCoFunction.getTableParameterList().getTable(properties.getProperty("jco.table.out"));
 
-        String fileName = importParameterList.getString(properties.getProperty("jco.param.import"));
+        String fileName = importParameterList.getString(properties.getProperty("jco.param.import.out"));
 
         StringBuilder fileContent = new StringBuilder();
         do {
-            String tableColumn = tableParameterList.getString(properties.getProperty("jco.param.table"));
+            String tableColumn = tableParameterList.getString(properties.getProperty("jco.table.col.out"));
             fileContent.append(tableColumn).append("\r\n");
         } while (tableParameterList.nextRow());
 
         String upload = sftpService.upload(fileName, fileContent.toString());
 
-        exportParameterList.setValue(properties.getProperty("jco.param.export"), upload);
+        exportParameterList.setValue(properties.getProperty("jco.param.export.out"), upload);
 
         long result = System.currentTimeMillis() - startTime;
-        log.info("RFC HANDLE REQUEST SUCCESS ({}sec)", result * 0.001);
+        log.info("[END] RFC HANDLE REQUEST ({}sec)------------------------", result * 0.001);
     }
 }

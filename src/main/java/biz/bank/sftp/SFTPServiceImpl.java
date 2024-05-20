@@ -82,54 +82,30 @@ public class SFTPServiceImpl implements SFTPService {
     }
 
     @Override
-    public void batchDownload() {
-        int time = Integer.parseInt(properties.getProperty("LIVE_INTERVAL")) * 1000;
-        Timer timer = new Timer();
-
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                download();
-            }
-        };
-
-        timer.schedule(timerTask, 0, time);
-    }
-
-    @Override
     public void download() {
         long startTime = System.currentTimeMillis();
         setConnect();
-        JCoParameterList exportParameterList = null;
         try {
             JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("jco.server.repository_destination"));
             JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("jco.function"));
-
-            String calendar = calendarUtil.setDownloadCalendar();
 
             Vector<ChannelSftp.LsEntry> fileList = channelSftp.ls(properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR"));
 
             for (ChannelSftp.LsEntry entry : fileList) {
                 if (!entry.getAttrs().isDir()) {
                     String remoteFile = properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR") + "/" + entry.getFilename();
-
-                    String localFile = calendar + File.separator + entry.getFilename();
+                    String localFile = properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + entry.getFilename();
                     channelSftp.get(remoteFile, localFile);
+                    log.info("[FILE DOWNLOADED] {}", entry.getFilename());
                 }
-                log.info("[FILE DOWNLOADED] {}", entry.getFilename());
             }
-
-            exportParameterList = jCoFunction.getExportParameterList();
-            exportParameterList.setValue(properties.getProperty("jco.param.export"), "S");
-            jCoFunction.execute(jCoDestination);
 
             long endTime = System.currentTimeMillis() - startTime;
             log.info("SFTP DOWNLOAD SUCCESS [{}sec] \r\n", endTime * 0.001);
         } catch (SftpException e) {
-            exportParameterList.setValue(properties.getProperty("jco.param.export"), "F");
-            log.info("CAN NOT FILE DOWNLOADED: {}", e.getMessage());
+            log.info("CAN NOT FILE DOWNLOADED: {} \r\n", e.getMessage());
         } catch (JCoException e) {
-            log.info("SFTP DOWNLOAD JCO FUNCTION ERROR: {}", e.getMessage());
+            log.info("SFTP DOWNLOAD JCO FUNCTION ERROR: {} \r\n", e.getMessage());
         } finally {
             disconnect();
         }
