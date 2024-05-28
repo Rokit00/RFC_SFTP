@@ -1,10 +1,9 @@
-package biz.bank.sftp;
+package suhun.sftp.sftp;
 
-import biz.bank.util.CalendarUtil;
-import biz.bank.util.PropertiesUtil;
+import suhun.sftp.util.CalendarUtil;
+import suhun.sftp.util.PropertiesUtil;
 
 import com.jcraft.jsch.*;
-import com.sap.conn.jco.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SFTPServiceImpl implements SFTPService {
     private final JSch jSch = new JSch();
@@ -21,6 +23,12 @@ public class SFTPServiceImpl implements SFTPService {
     private Session session;
     private ChannelSftp channelSftp;
     private static final Logger log = LoggerFactory.getLogger(SFTPServiceImpl.class);
+    private ScheduledExecutorService scheduler;
+
+    public SFTPServiceImpl() {
+        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this::download, 0, 1, TimeUnit.MINUTES);
+    }
 
     @Override
     public void setConnect() {
@@ -62,7 +70,7 @@ public class SFTPServiceImpl implements SFTPService {
             FileInputStream fileInputStream = new FileInputStream(file);
             channelSftp.put(fileInputStream, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
             fileInputStream.close();
-            log.info("[FILE UPLOADED] {} [PATH] {}", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+            log.info("[FILE UPLOAD] {} [PATH] {}", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
 
             Files.move(
                     Paths.get(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName),
@@ -71,7 +79,7 @@ public class SFTPServiceImpl implements SFTPService {
             log.info("[FILE MOVE] [PATH] {} -> [PATH] {}", file.getPath(), calendar + File.separator + fileName);
 
             long endTime = System.currentTimeMillis() - startTime;
-            log.info("SFTP UPLOADED SUCCESS [{}sec]", endTime * 0.001);
+            log.info("[SUCCESS] UPLOAD ({}sec)", endTime * 0.001);
             return "S";
         } catch (IOException | SftpException e) {
             log.error(e.getMessage());
@@ -86,9 +94,6 @@ public class SFTPServiceImpl implements SFTPService {
         long startTime = System.currentTimeMillis();
         setConnect();
         try {
-            JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("jco.server.repository_destination"));
-            JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("jco.function"));
-
             Vector<ChannelSftp.LsEntry> fileList = channelSftp.ls(properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR"));
 
             for (ChannelSftp.LsEntry entry : fileList) {
@@ -96,18 +101,16 @@ public class SFTPServiceImpl implements SFTPService {
                     String remoteFile = properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR") + "/" + entry.getFilename();
                     String localFile = properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + entry.getFilename();
                     channelSftp.get(remoteFile, localFile);
-                    log.info("[FILE DOWNLOADED] {}", entry.getFilename());
+                    log.info("[DOWNLOADED FILES] {}", entry.getFilename());
                 }
             }
 
-            long endTime = System.currentTimeMillis() - startTime;
-            log.info("SFTP DOWNLOAD SUCCESS [{}sec] \r\n", endTime * 0.001);
         } catch (SftpException e) {
-            log.info("CAN NOT FILE DOWNLOADED: {} \r\n", e.getMessage());
-        } catch (JCoException e) {
-            log.info("SFTP DOWNLOAD JCO FUNCTION ERROR: {} \r\n", e.getMessage());
+            log.info("CAN NOT DOWNLOADED FILES: {} \r\n", e.getMessage());
         } finally {
             disconnect();
+            long endTime = System.currentTimeMillis() - startTime;
+            log.info("[SUCCESS] DOWNLOAD ({}sec) \r\n", endTime * 0.001);
         }
     }
 }

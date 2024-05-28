@@ -1,6 +1,6 @@
-package biz.bank.jco;
+package suhun.sftp.jco;
 
-import biz.bank.util.LogAPIUtil;
+import suhun.sftp.util.LogAPIUtil;
 import com.sap.conn.jco.server.JCoServer;
 import com.sap.conn.jco.server.JCoServerState;
 import com.sap.conn.jco.server.JCoServerStateChangedListener;

@@ -11,7 +11,7 @@
         </encoder>
     </appender>
 
-    <logger name="biz.bank.Main" level="debug"/>
+    <logger name="suhun.sftp.Main" level="debug"/>
 
     <root level="info">
         <appender-ref ref="FILE"/>

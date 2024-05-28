@@ -1,4 +1,4 @@
-package biz.bank.jco;
+package suhun.sftp.jco;
 
 import com.sap.conn.jco.server.JCoServer;
 import com.sap.conn.jco.server.JCoServerContextInfo;

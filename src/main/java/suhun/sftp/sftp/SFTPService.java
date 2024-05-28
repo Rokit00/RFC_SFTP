@@ -1,4 +1,4 @@
-package biz.bank.sftp;
+package suhun.sftp.sftp;
 
 public interface SFTPService {
     void setConnect();

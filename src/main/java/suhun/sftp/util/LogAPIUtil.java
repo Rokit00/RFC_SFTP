@@ -1,4 +1,4 @@
-package biz.bank.util;
+package suhun.sftp.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Properties;
 
 public class LogAPIUtil {
@@ -14,28 +13,25 @@ public class LogAPIUtil {
     Properties propertiesUtil = PropertiesUtil.getProperties();
 
     public void send(String state) {
+        long startTime = System.currentTimeMillis();
         try {
             String encodedUrl = propertiesUtil.getProperty("API.URL").trim() + "?" +
-                    "&sysname=" + URLEncoder.encode(propertiesUtil.getProperty("API.NAME"), "UTF-8") +
-                    "&type1=" + URLEncoder.encode(state, "UTF-8");
+                    "&sysname=" + propertiesUtil.getProperty("API.NAME") +
+                    "&type3=" + state;
+            log.info(encodedUrl);
 
             sendHttp(encodedUrl);
+            long result = System.currentTimeMillis() - startTime;
+            log.info("[SUCCESS] Log API SEND ({}sec)", result * 0.001);
         } catch (IOException e) {
             log.error("[LOG API SEND ERROR] {}", e.getMessage());
         }
-        log.info("HTTP API SUCCESS");
     }
 
     private void sendHttp(String encodedUrl) throws IOException {
         URL url = new URL(encodedUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/xml,text/xml,application/xhtml+xml");
-        connection.setRequestProperty("Accept-Charset", "UTF-8");
-        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-
         connection.connect();
-
-        connection.disconnect();
+        log.info("Log API RESPONSE: [{}]", connection.getResponseMessage());
     }
 }
