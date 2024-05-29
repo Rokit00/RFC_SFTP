@@ -43,7 +43,7 @@ public class SFTPServiceImpl implements SFTPService {
 
             log.info("SFTP CONNECTED");
         } catch (JSchException e) {
-            log.info("Could not connect to SFTP server", e);
+            log.info("COULD NOT CONNECT TO SFTP SERVER: {}", e.getMessage());
         }
     }
 
@@ -51,6 +51,7 @@ public class SFTPServiceImpl implements SFTPService {
     public void disconnect() {
         channelSftp.disconnect();
         session.disconnect();
+        log.info("SFTP DISCONNECTED");
     }
 
     @Override
@@ -58,34 +59,32 @@ public class SFTPServiceImpl implements SFTPService {
         long startTime = System.currentTimeMillis();
         setConnect();
         try {
+            log.info("SAP -> DEMON: [{}] [{}]", fileName, importParam);
             File file = new File(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName);
 
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(importParam);
             fileWriter.close();
-            log.info("[FILE CREATED] {} [PATH] {}", file.getName(), file.getPath());
+            log.info("[FILE CREATED] [{}/{}]", file.getPath(), file.getName());
 
             String calendar = calendarUtil.setUploadCalendar();
 
             FileInputStream fileInputStream = new FileInputStream(file);
             channelSftp.put(fileInputStream, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
             fileInputStream.close();
-            log.info("[FILE UPLOAD] {} [PATH] {}", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+            log.info("[UPLOAD] DEMON -> BANK [{}/{}]", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
 
-            Files.move(
-                    Paths.get(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName),
-                    Paths.get(calendar + File.separator + fileName),
-                    StandardCopyOption.ATOMIC_MOVE);
-            log.info("[FILE MOVE] [PATH] {} -> [PATH] {}", file.getPath(), calendar + File.separator + fileName);
+            Files.move(Paths.get(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
+            log.info("[FILE MOVE] [{}] -> [{}]", file.getPath(), calendar + File.separator + fileName);
 
-            long endTime = System.currentTimeMillis() - startTime;
-            log.info("[SUCCESS] UPLOAD ({}sec)", endTime * 0.001);
             return "S";
         } catch (IOException | SftpException e) {
-            log.error(e.getMessage());
+            log.error("FILE UPLOAD FAILED: {}", e.getMessage());
             return "F";
         } finally {
             disconnect();
+            long endTime = System.currentTimeMillis() - startTime;
+            log.info("[SUCCESS] UPLOAD ({}sec)", endTime * 0.001);
         }
     }
 
@@ -101,16 +100,15 @@ public class SFTPServiceImpl implements SFTPService {
                     String remoteFile = properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR") + "/" + entry.getFilename();
                     String localFile = properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + entry.getFilename();
                     channelSftp.get(remoteFile, localFile);
-                    log.info("[DOWNLOADED FILES] {}", entry.getFilename());
+                    log.info("[DOWNLOAD] BANK -> DEMON {}", entry.getFilename());
                 }
             }
-
         } catch (SftpException e) {
             log.info("CAN NOT DOWNLOADED FILES: {} \r\n", e.getMessage());
         } finally {
             disconnect();
             long endTime = System.currentTimeMillis() - startTime;
-            log.info("[SUCCESS] DOWNLOAD ({}sec) \r\n", endTime * 0.001);
+            log.info("[SUCCESS DOWNLOAD] BANK -> DEMON ({}sec)\r\n", endTime * 0.001);
         }
     }
 }

@@ -60,29 +60,28 @@ public class SFTPWatchService {
         try {
             String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
 
-            JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("jco.server.repository_destination"));
-            JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("jco.function"));
+            JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("JCO.SERVER.REPOSITORY_DESTINATION"));
+            JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("JCO.FUNCTION"));
 
             JCoParameterList importParameterList = jCoFunction.getImportParameterList();
             JCoParameterList exportParameterList = jCoFunction.getExportParameterList();
 
-            importParameterList.setValue(properties.getProperty("jco.param.import0"), fileName);
-            importParameterList.setValue(properties.getProperty("jco.param.import1"), fileContent);
-            log.info("From Bank File Name {}", fileName);
+            importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT0"), fileName);
+            importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT1"), fileContent);
 
             jCoFunction.execute(jCoDestination);
 
             String result = exportParameterList.getValue(properties.getProperty("jco.param.export")).toString();
-            log.info("IFRESULT [{}]", result);
-            log.info("To SAP SUCCESS");
+
+            log.info("[SUCCESS] DEMON -> SAP: {} IFRESULT: {}", fileName, result);
 
             String calendar = calendarUtil.setDownloadCalendar();
             Files.move(Paths.get(filePath), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
-            log.info("[FILE MOVE] [PATH] {} -> [PATH] {} \r\n", filePath, calendar + File.separator + fileName);
+            log.info("[FILE MOVE] [{}] -> [{}] \r\n", filePath, calendar + File.separator + fileName);
         } catch (IOException e) {
-            log.error("File Access Failed: {} \r\n", e.getMessage());
+            log.error("INPUT OR OUTPUT ERROR: {}\r\n", e.getMessage());
         } catch (JCoException e) {
-            log.error("Watch Service JCo ERROR {} \r\n", e.getMessage());
+            log.error("JCO ERROR: {}\r\n", e.getMessage());
         }
     }
 }

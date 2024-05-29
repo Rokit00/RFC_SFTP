@@ -127,3 +127,492 @@ COUNTER     5
     return code: RFC_FAILURE (1)
     error group: 102
     key: RFC_ERROR_COMMUNICATION
+
+**** Error file opened at 20240529 100835 Korea Standard Time Rel 3.0.11 (2014-04-15) [721.713]
+Error:  >Wed May 29 10:08:35,374<    RfcException:
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZH2HRBC ASHOST=10.120.2.30 SYSNR=00 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.120.2.30:3300' not reached
+TIME        Wed May 29 10:08:35 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:08:56,587<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:08:56 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     1
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:09:18,650<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:09:18 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:09:40,723<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:09:40 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     3
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:10:02,796<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:10:02 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     4
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:10:24,910<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:10:24 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     5
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:10:47,053<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:10:47 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     6
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:11:19,259<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:11:19 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     7
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:12:23,602<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:12:23 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     8
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:14:32,238<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:14:32 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     9
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:18:49,271<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:18:49 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     10
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+**** Error file opened at 20240529 103203 Korea Standard Time Rel 3.0.11 (2014-04-15) [721.713]
+Error:  >Wed May 29 10:32:03,397<    RfcException:
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZH2HRBC ASHOST=10.120.2.30 SYSNR=00 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.120.2.30:3300' not reached
+TIME        Wed May 29 10:32:03 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:32:24,553<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:32:24 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     1
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:32:46,649<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:32:46 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:33:08,706<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:33:08 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     3
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:33:30,832<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:33:30 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     4
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:33:52,932<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:33:52 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     5
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:34:15,000<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:34:15 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     6
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:34:47,096<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:34:47 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     7
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:35:51,341<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:35:51 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     8
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:37:59,814<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:37:59 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     9
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:42:17,275<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:42:17 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     10
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Error:  >Wed May 29 10:50:50,148<    RfcException:
+    message: Connect to SAP gateway failed
+    Connection parameters: TPNAME=ZH2HRBC GWHOST=10.120.2.30 GWSERV=sapgw00
+
+ERROR       partner '10.120.2.30:sapgw00' not reached
+TIME        Wed May 29 10:50:50 2024
+RELEASE     721
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3283
+DETAIL      NiPConnect2: 10.120.2.30:3300
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     11
+
+    return code: RFC_FAILURE (1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
