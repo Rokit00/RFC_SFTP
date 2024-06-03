@@ -34,7 +34,7 @@ public class JCoServerFunctionHandlerImpl implements JCoServerFunctionHandler {
         } while (tableParameterList.nextRow());
 
         log.info("SAP -> DEMON [{}]", fileName);
-        String upload = sftpService.upload(fileName, fileContent.toString());
+        String upload = sftpService.createFile(fileName, fileContent.toString());
 
         exportParameterList.setValue(properties.getProperty("JCO.REQUEST.PARAM.EXPORT"), upload);
 

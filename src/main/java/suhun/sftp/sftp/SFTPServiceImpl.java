@@ -8,9 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -57,34 +54,22 @@ public class SFTPServiceImpl implements SFTPService {
     }
 
     @Override
-    public String upload(String fileName, String fileContent) {
+    public String createFile(String fileName, String fileContent) {
         long startTime = System.currentTimeMillis();
-        setConnect();
         try {
             File file = new File(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName);
 
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(fileContent);
             fileWriter.close();
-            log.debug("[FILE CREATED] [{}] [{}]", file.getName(), file.getPath());
 
-            FileInputStream fileInputStream = new FileInputStream(file);
-            channelSftp.put(fileInputStream, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
-            log.info("DEMON -> BANK [{}] [{}]", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
-
-            String calendar = calendarUtil.setUploadCalendar();
-
-            Files.move(Paths.get(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
-            log.debug("[FILE MOVE] [{}] -> [{}]", file.getPath(), calendar + File.separator + fileName);
-            fileInputStream.close();
-            return "S";
-        } catch (IOException | SftpException e) {
-            log.error("FILE UPLOAD FAILED: {}", e.getMessage());
-            return "F";
-        } finally {
-            disconnect();
             long endTime = System.currentTimeMillis() - startTime;
-            log.info("[SUCCESS] UPLOAD ({}sec)", endTime * 0.001);
+            log.debug("[FILE CREATED] [{}] [{}] ({}sec)", file.getName(), file.getPath(), endTime * 0.001);
+
+            return "S";
+        } catch (IOException e) {
+            log.error("CREATE FILE FAILED: {}", e.getMessage());
+            return "F";
         }
     }
 
@@ -105,7 +90,7 @@ public class SFTPServiceImpl implements SFTPService {
                 }
             }
         } catch (SftpException e) {
-            log.info("CAN NOT DOWNLOAD: {} \r\n", e.getMessage());
+            log.error("[DOWNLOAD] [{}] \r\n", e.getMessage());
         } finally {
             disconnect();
         }

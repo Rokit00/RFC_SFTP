@@ -12,21 +12,19 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.Properties;
 
-public class SFTPWatchService extends Thread {
-    private static final Logger log = LoggerFactory.getLogger(SFTPWatchService.class);
+public class FileTransferToSAP extends Thread {
+    private static final Logger log = LoggerFactory.getLogger(FileTransferToSAP.class);
     Properties properties = PropertiesUtil.getProperties();
     CalendarUtil calendarUtil = new CalendarUtil();
 
-    public void setSendSAP() {
+    @Override
+    public void run() {
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
 
             Path path = Paths.get(properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR"));
 
-            path.register(watchService,
-                    StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE,
-                    StandardWatchEventKinds.ENTRY_MODIFY);
+            path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
             while (true) {
                 WatchKey key = watchService.take();
