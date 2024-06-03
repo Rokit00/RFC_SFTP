@@ -12,6 +12,6 @@ public class Main {
         SFTPService sftpService = new SFTPServiceImpl();
 
         SFTPWatchService sftpWatchService = new SFTPWatchService();
-        sftpWatchService.start();
+        sftpWatchService.setSendSAP();
     }
 }

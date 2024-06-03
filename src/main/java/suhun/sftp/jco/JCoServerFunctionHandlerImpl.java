@@ -18,7 +18,7 @@ public class JCoServerFunctionHandlerImpl implements JCoServerFunctionHandler {
 
     @Override
     public void handleRequest(JCoServerContext jCoServerContext, JCoFunction jCoFunction) {
-        log.info("[START] RFC HANDLE REQUEST");
+        log.debug("[START] RFC HANDLE REQUEST");
         long startTime = System.currentTimeMillis();
 
         JCoParameterList importParameterList = jCoFunction.getImportParameterList();
@@ -33,11 +33,12 @@ public class JCoServerFunctionHandlerImpl implements JCoServerFunctionHandler {
             fileContent.append(tableColumn).append("\r\n");
         } while (tableParameterList.nextRow());
 
+        log.info("SAP -> DEMON [{}]", fileName);
         String upload = sftpService.upload(fileName, fileContent.toString());
 
         exportParameterList.setValue(properties.getProperty("JCO.REQUEST.PARAM.EXPORT"), upload);
 
         long result = System.currentTimeMillis() - startTime;
-        log.info("[END] RFC HANDLE REQUEST ({}sec) \r\n", result * 0.001);
+        log.debug("[END] RFC HANDLE REQUEST ({}sec) \r\n", result * 0.001);
     }
 }

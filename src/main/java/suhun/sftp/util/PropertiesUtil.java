@@ -14,7 +14,7 @@ public class PropertiesUtil {
     private static final Logger log = LoggerFactory.getLogger(PropertiesUtil.class);
 
     static {
-        try (InputStream inputStream = Files.newInputStream(Paths.get("config.properties"))) {
+        try (InputStream inputStream = Files.newInputStream(Paths.get("demon.properties"))) {
             properties.load(inputStream);
         } catch (IOException e) {
             log.error(e.getMessage());

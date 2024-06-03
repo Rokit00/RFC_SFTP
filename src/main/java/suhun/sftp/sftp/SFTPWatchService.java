@@ -12,12 +12,12 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.Properties;
 
-public class SFTPWatchService {
+public class SFTPWatchService extends Thread {
     private static final Logger log = LoggerFactory.getLogger(SFTPWatchService.class);
     Properties properties = PropertiesUtil.getProperties();
     CalendarUtil calendarUtil = new CalendarUtil();
 
-    public void start() {
+    public void setSendSAP() {
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
 
@@ -42,46 +42,37 @@ public class SFTPWatchService {
                         String filePath = properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + fileName;
 
                         while (true) {
-                            download(filePath, fileName);
+                            try {
+                                String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
+
+                                JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("JCO.SERVER.REPOSITORY_DESTINATION"));
+                                JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("JCO.FUNCTION"));
+
+                                JCoParameterList importParameterList = jCoFunction.getImportParameterList();
+                                JCoParameterList exportParameterList = jCoFunction.getExportParameterList();
+
+                                importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT0"), fileName);
+                                importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT1"), fileContent);
+                                jCoFunction.execute(jCoDestination);
+
+                                String exportParameter = exportParameterList.getValue(properties.getProperty("JCO.PARAM.EXPORT")).toString();
+                                log.info("DEMON -> SAP [{}] [RESULT: {}]", fileName, exportParameter);
+
+                                String calendar = calendarUtil.setDownloadCalendar();
+                                Files.move(Paths.get(filePath), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
+                                log.info("[FILE MOVE] [PATH: {}] -> [PATH: {}]\r\n", filePath, calendar + File.separator + fileName);
+                            } catch (IOException | JCoException e) {
+                                log.error("DEMON -> SAP: [{}] \r\n", e.getMessage());
+                            }
                         }
                     }
                 }
-
                 if (!key.reset()) break;
             }
 
             watchService.close();
         } catch (IOException | InterruptedException e) {
-            log.error("Watch Service IO OR Interrupted ERROR {} \r\n", e.getMessage());
-        }
-    }
-
-    private void download(String filePath, String fileName) {
-        try {
-            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
-
-            JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("JCO.SERVER.REPOSITORY_DESTINATION"));
-            JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("JCO.FUNCTION"));
-
-            JCoParameterList importParameterList = jCoFunction.getImportParameterList();
-            JCoParameterList exportParameterList = jCoFunction.getExportParameterList();
-
-            importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT0"), fileName);
-            importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT1"), fileContent);
-
-            jCoFunction.execute(jCoDestination);
-
-            String result = exportParameterList.getValue(properties.getProperty("jco.param.export")).toString();
-
-            log.info("[SUCCESS] DEMON -> SAP: {} IFRESULT: {}", fileName, result);
-
-            String calendar = calendarUtil.setDownloadCalendar();
-            Files.move(Paths.get(filePath), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
-            log.info("[FILE MOVE] [{}] -> [{}] \r\n", filePath, calendar + File.separator + fileName);
-        } catch (IOException e) {
-            log.error("INPUT OR OUTPUT ERROR: {}\r\n", e.getMessage());
-        } catch (JCoException e) {
-            log.error("JCO ERROR: {}\r\n", e.getMessage());
+            log.error("Watch Service: [{}] \r\n", e.getMessage());
         }
     }
 }

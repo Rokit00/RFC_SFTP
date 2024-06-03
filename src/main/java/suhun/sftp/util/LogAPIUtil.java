@@ -18,11 +18,11 @@ public class LogAPIUtil {
             String encodedUrl = propertiesUtil.getProperty("API.URL").trim() + "?" +
                     "&sysname=" + propertiesUtil.getProperty("API.NAME") +
                     "&type3=" + state;
-            log.info(encodedUrl);
+            log.debug(encodedUrl);
 
             sendHttp(encodedUrl);
             long result = System.currentTimeMillis() - startTime;
-            log.info("[SUCCESS] Log API SEND ({}sec)", result * 0.001);
+            log.debug("[SUCCESS] Log API SEND ({}sec)", result * 0.001);
         } catch (IOException e) {
             log.error("[LOG API SEND ERROR] {}", e.getMessage());
         }
@@ -32,6 +32,6 @@ public class LogAPIUtil {
         URL url = new URL(encodedUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
-        log.info("Log API RESPONSE: [{}]", connection.getResponseMessage());
+        log.debug("Log API RESPONSE: [{}]", connection.getResponseMessage());
     }
 }

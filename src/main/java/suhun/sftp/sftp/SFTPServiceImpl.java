@@ -27,11 +27,12 @@ public class SFTPServiceImpl implements SFTPService {
 
     public SFTPServiceImpl() {
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::download, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::download, 0, Integer.parseInt(properties.getProperty("SFTP.DOWNLOAD.INTERVAL")), TimeUnit.SECONDS);
     }
 
     @Override
     public void setConnect() {
+        long startTime = System.currentTimeMillis();
         try {
             jSch.addIdentity(properties.getProperty("SFTP.PRIVATE_KEY"));
             session = jSch.getSession(properties.getProperty("SFTP.USERNAME"), properties.getProperty("SFTP.HOST"), Integer.parseInt(properties.getProperty("SFTP.PORT")));
@@ -41,7 +42,8 @@ public class SFTPServiceImpl implements SFTPService {
             channelSftp = (ChannelSftp) session.openChannel("sftp");
             channelSftp.connect();
 
-            log.info("SFTP CONNECTED");
+            long endTime = System.currentTimeMillis() - startTime;
+            log.info("SFTP CONNECTED ({}sec)", endTime * 0.001);
         } catch (JSchException e) {
             log.info("COULD NOT CONNECT TO SFTP SERVER: {}", e.getMessage());
         }
@@ -55,28 +57,26 @@ public class SFTPServiceImpl implements SFTPService {
     }
 
     @Override
-    public String upload(String fileName, String importParam) {
+    public String upload(String fileName, String fileContent) {
         long startTime = System.currentTimeMillis();
         setConnect();
         try {
-            log.info("SAP -> DEMON: [{}] [{}]", fileName, importParam);
             File file = new File(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName);
 
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(importParam);
+            fileWriter.write(fileContent);
             fileWriter.close();
-            log.info("[FILE CREATED] [{}/{}]", file.getPath(), file.getName());
-
-            String calendar = calendarUtil.setUploadCalendar();
+            log.debug("[FILE CREATED] [{}] [{}]", file.getName(), file.getPath());
 
             FileInputStream fileInputStream = new FileInputStream(file);
             channelSftp.put(fileInputStream, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
-            fileInputStream.close();
-            log.info("[UPLOAD] DEMON -> BANK [{}/{}]", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+            log.info("DEMON -> BANK [{}] [{}]", file.getName(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+
+            String calendar = calendarUtil.setUploadCalendar();
 
             Files.move(Paths.get(properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
-            log.info("[FILE MOVE] [{}] -> [{}]", file.getPath(), calendar + File.separator + fileName);
-
+            log.debug("[FILE MOVE] [{}] -> [{}]", file.getPath(), calendar + File.separator + fileName);
+            fileInputStream.close();
             return "S";
         } catch (IOException | SftpException e) {
             log.error("FILE UPLOAD FAILED: {}", e.getMessage());
@@ -100,15 +100,14 @@ public class SFTPServiceImpl implements SFTPService {
                     String remoteFile = properties.getProperty("SFTP.REMOTE.DOWNLOAD.DIR") + "/" + entry.getFilename();
                     String localFile = properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + entry.getFilename();
                     channelSftp.get(remoteFile, localFile);
-                    log.info("[DOWNLOAD] BANK -> DEMON {}", entry.getFilename());
+                    long endTime = System.currentTimeMillis() - startTime;
+                    log.info("[DOWNLOAD] BANK -> DEMON [{}] ({}sec)\r\n", entry.getFilename(), endTime * 0.001);
                 }
             }
         } catch (SftpException e) {
-            log.info("CAN NOT DOWNLOADED FILES: {} \r\n", e.getMessage());
+            log.info("CAN NOT DOWNLOAD: {} \r\n", e.getMessage());
         } finally {
             disconnect();
-            long endTime = System.currentTimeMillis() - startTime;
-            log.info("[SUCCESS DOWNLOAD] BANK -> DEMON ({}sec)\r\n", endTime * 0.001);
         }
     }
 }
