@@ -2,8 +2,9 @@ package suhun.sftp;
 
 import suhun.sftp.jco.JCoServerConfig;
 import suhun.sftp.sftp.FileTransfer;
-import suhun.sftp.sftp.SFTPServiceImpl;
 import suhun.sftp.sftp.FileTransferToSAP;
+import suhun.sftp.sftp.SFTPServiceImpl;
+
 
 public class Main {
     public static void main(String[] args) {
