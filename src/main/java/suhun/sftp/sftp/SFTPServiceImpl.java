@@ -24,7 +24,7 @@ public class SFTPServiceImpl implements SFTPService {
 
     public SFTPServiceImpl() {
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::download, 0, Integer.parseInt(properties.getProperty("SFTP.DOWNLOAD.INTERVAL")), TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::getFilesFromBank, 0, Integer.parseInt(properties.getProperty("SFTP.DOWNLOAD.INTERVAL")), TimeUnit.SECONDS);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SFTPServiceImpl implements SFTPService {
     }
 
     @Override
-    public void download() {
+    public void getFilesFromBank() {
         long startTime = System.currentTimeMillis();
         setConnect();
         try {

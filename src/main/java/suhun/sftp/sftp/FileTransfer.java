@@ -1,18 +1,18 @@
 package suhun.sftp.sftp;
 
 import com.jcraft.jsch.*;
+import com.sap.conn.jco.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import suhun.sftp.util.CalendarUtil;
 import suhun.sftp.util.PropertiesUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 public class FileTransfer extends Thread {
 
@@ -23,6 +23,7 @@ public class FileTransfer extends Thread {
     private final CalendarUtil calendarUtil = new CalendarUtil();
     private static final Properties properties = PropertiesUtil.getProperties();
 
+    private Set<String> processedFiles = new HashSet<>();
 
     @Override
     public void run() {
@@ -31,10 +32,8 @@ public class FileTransfer extends Thread {
             WatchService watchService = FileSystems.getDefault().newWatchService();
             directory.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-
             while (true) {
                 WatchKey key = watchService.take();
-
                 List<WatchEvent<?>> list = key.pollEvents();
 
                 for (WatchEvent<?> event : list) {
@@ -45,7 +44,12 @@ public class FileTransfer extends Thread {
                         String fileName = context.toString();
                         String filePath = properties.getProperty("SFTP.LOCAL.UPLOAD.DIR") + File.separator + fileName;
 
-                        uploadFile(fileName, filePath);
+                        if (!processedFiles.contains(fileName)) {
+                            uploadFile(fileName, filePath);
+                            processedFiles.add(fileName);
+                        } else {
+                            log.info("File {} has already been processed, skipping...", fileName);
+                        }
                     }
                 }
                 key.reset();
@@ -57,9 +61,15 @@ public class FileTransfer extends Thread {
 
     private void uploadFile(String fileName, String filePath) {
         long startTime = System.currentTimeMillis();
-        try {
-            byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
 
+        try {
+            StringBuilder fileContent = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileContent.append(line).append("\n");
+                }
+            }
             jSch.addIdentity(properties.getProperty("SFTP.PRIVATE_KEY"));
             session = jSch.getSession(properties.getProperty("SFTP.USERNAME"), properties.getProperty("SFTP.HOST"), Integer.parseInt(properties.getProperty("SFTP.PORT")));
             session.setConfig("StrictHostKeyChecking", "no");
@@ -68,20 +78,60 @@ public class FileTransfer extends Thread {
             channelSftp = (ChannelSftp) session.openChannel("sftp");
             channelSftp.connect();
 
-            log.info("SFTP CONNECTED ({}sec)", (System.currentTimeMillis() - startTime) * 0.001);
+            log.debug("SFTP CONNECTED ({}sec)", (System.currentTimeMillis() - startTime) * 0.001);
 
-            channelSftp.put(new ByteArrayInputStream(fileContent), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
-            log.info("DEMON -> BANK [{}] [{}]", fileName, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+            channelSftp.put(fileContent.toString(), properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
 
             String calendar = calendarUtil.setUploadCalendar();
             Files.move(Paths.get(filePath), Paths.get(calendar + File.separator + fileName), StandardCopyOption.ATOMIC_MOVE);
-            log.debug("[FILE MOVE] [{}] -> [{}]", filePath, calendar + File.separator + fileName);
+            log.info("DEMON -> BANK [{}] [{}]", fileName, properties.getProperty("SFTP.REMOTE.UPLOAD.DIR") + "/" + fileName);
+
+            File resultFile = new File(properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + fileName + ".OK");
+            try {
+                FileWriter fileWriter = new FileWriter(resultFile);
+                fileWriter.write("resultFile");
+                fileWriter.close();
+            } catch (IOException ex) {
+                log.error(ex.getMessage());
+            }
+
+            JCoDestination jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("JCO.SERVER.REPOSITORY_DESTINATION"));
+            JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("JCO.FUNCTION"));
+
+            JCoParameterList importParameterList = jCoFunction.getImportParameterList();
+
+            importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT0"), fileName + ".OK");
+            jCoFunction.execute(jCoDestination);
+            log.info("DEMON -> SAP [FILE RESULT: {}]", fileName + ".OK");
         } catch (IOException e) {
-            log.error("FileTransfer IO: {}", e.getMessage());
+            log.error("IO ERROR {}", e.getMessage());
         } catch (JSchException e) {
-            log.info("COULD NOT CONNECT TO SFTP SERVER: {}", e.getMessage());
+            log.error("JSch ERROR {}", e.getMessage());
         } catch (SftpException e) {
-            log.error("FileTransfer SFTP: {}", e.getMessage());
+            File resultFile = new File(properties.getProperty("SFTP.LOCAL.DOWNLOAD.DIR") + File.separator + fileName + ".ERROR");
+            try {
+                FileWriter fileWriter = new FileWriter(resultFile);
+                fileWriter.write("resultFile");
+                fileWriter.close();
+            } catch (IOException ex) {
+                log.error(ex.getMessage());
+            }
+
+            JCoDestination jCoDestination = null;
+            try {
+                jCoDestination = JCoDestinationManager.getDestination(properties.getProperty("JCO.SERVER.REPOSITORY_DESTINATION"));
+                JCoFunction jCoFunction = jCoDestination.getRepository().getFunction(properties.getProperty("JCO.FUNCTION"));
+
+                JCoParameterList importParameterList = jCoFunction.getImportParameterList();
+
+                importParameterList.setValue(properties.getProperty("JCO.PARAM.IMPORT0"), fileName + ".ERROR");
+                jCoFunction.execute(jCoDestination);
+                log.error("SFTP ERROR {}", e.getMessage());
+            } catch (JCoException ex) {
+                log.error(ex.getMessage());
+            }
+        } catch (JCoException e) {
+            log.error("JCO ERROR {}", e.getMessage());
         } finally {
             if (session != null && session.isConnected()) {
                 session.disconnect();
